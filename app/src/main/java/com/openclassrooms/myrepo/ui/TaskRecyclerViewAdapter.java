@@ -56,8 +56,8 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             factTextView = itemView.findViewById(R.id.task_description);
-            dueTimeTextView = itemView.findViewById(R.id.task_duetime);
-            progressIndicator = itemView.findViewById(R.id.progress_horizontal);
+            dueTimeTextView = itemView.findViewById(R.id.task_duetime); // Affiche la date limite de la tâche
+            progressIndicator = itemView.findViewById(R.id.progress_horizontal); // Indicateur de progression pour la tâche
 
         }
 
@@ -77,13 +77,23 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
 
             progressIndicator.setProgress(progress);
         }
-        private int calculateProgress(Date dueTime) {
 
+        /**
+         * Calcule le pourcentage de progression en fonction de la date limite.
+         * La progression est estimée en fonction du nombre de jours restants jusqu'à la date limite.
+         *
+         * @param dueTime La date limite de la tâche.
+         * @return Le pourcentage de progression de la tâche (0 à 100).
+         */
+        private int calculateProgress(Date dueTime) {
+            // Initialise un calendrier pour la date actuelle
             Calendar calendarToday = Calendar.getInstance();
             calendarToday.set(Calendar.HOUR_OF_DAY, 0);
             calendarToday.set(Calendar.MINUTE, 0);
             calendarToday.set(Calendar.SECOND, 0);
             calendarToday.set(Calendar.MILLISECOND, 0);
+
+            // Initialise un calendrier pour la date limite
             Calendar calendarDueTime = Calendar.getInstance();
             calendarDueTime.setTime(dueTime);
             calendarDueTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -91,8 +101,10 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
             calendarDueTime.set(Calendar.SECOND, 0);
             calendarDueTime.set(Calendar.MILLISECOND, 0);
 
+            // Calcule la différence en jours entre la date limite et aujourd'hui
             int daysDifference = (int) ((calendarDueTime.getTimeInMillis() - calendarToday.getTimeInMillis()) / (24 * 60 * 60 * 1000));
 
+            // Calcule et retourne le pourcentage de progression
             return 100 - (daysDifference * 10);
 
         }
